@@ -4,9 +4,10 @@ set VERSION=8.8
 
 cd .\v8\v8
 
-set build=debug
+set build=release
+
 set v8_home=..\..\%VERSION%\%build%\
-xcopy .\include\*.h %v8_home%include\ /Q /Y
-xcopy .\out.gn\x64.release\obj\*.lib %v8_home%%build%\lib\ /Q /Y
+xcopy .\include\*.h %v8_home%include\ /S /Q /Y
+xcopy .\out.gn\x64.%build%\obj\*.lib %v8_home%lib\ /Q /Y
 
 pause

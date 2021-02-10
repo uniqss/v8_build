@@ -1,6 +1,7 @@
 Rem set VERSION=8.8.278.15
 Rem 20210207 branch-heads's 8.8 means 8.8.278.15
 set VERSION=8.8
+set build=debug
 cd c:\
 cd %HOMEPATH%
 echo =====[ Getting Depot Tools ]=====
@@ -23,13 +24,19 @@ call git restore *
 cd ..\..\..\
 call gclient sync
 echo =====[ Building V8 ]=====
-call gn gen out.gn\x64.release -args="target_os=""win"" target_cpu=""x64"" v8_use_external_startup_data=true v8_enable_i18n_support=false is_debug=true v8_static_library=true is_clang=false strip_debug_info=true symbol_level=0 v8_enable_pointer_compression=false"
-call ninja -C out.gn\x64.release -t clean
-call ninja -C out.gn\x64.release wee8
-node %~dp0\genBlobHeader.js "window x64" out.gn\x64.release\snapshot_blob.bin
-md output\v8\Lib\Win64
-copy /Y out.gn\x64.release\obj\wee8.lib output\v8\Lib\Win64\
-md output\v8\Inc\Blob\Win64
-copy SnapshotBlob.h output\v8\Inc\Blob\Win64\
+call gn gen out.gn\x64.%build% -args="target_os=""win"" target_cpu=""x64"" v8_use_external_startup_data=true v8_enable_i18n_support=false is_debug=true v8_static_library=true is_clang=false strip_debug_info=true symbol_level=0 v8_enable_pointer_compression=false"
+call ninja -C out.gn\x64.%build% -t clean
+call ninja -C out.gn\x64.%build% wee8
+node %~dp0\genBlobHeader.js "window x64" out.gn\x64.%build%\snapshot_blob.bin
+md output\v8\%build%\Lib
+copy /Y out.gn\x64.%build%\obj\wee8.lib output\v8\%build%\Lib
+md output\v8\%build%\Inc\Blob\Win64
+copy SnapshotBlob.h output\v8\%build%\Inc\Blob\Win64\
 echo =====[ Copy V8 header ]=====
-xcopy include output\v8\Inc\  /s/h/e/k/f/c
+xcopy include output\v8\%build%\Inc\  /s/h/e/k/f/c
+
+set v8_home=..\..\%VERSION%\%build%\
+xcopy .\include\*.h %v8_home%include\ /S /Q /Y
+xcopy .\out.gn\x64.%build%\obj\*.lib %v8_home%lib\ /Q /Y
+
+pause
