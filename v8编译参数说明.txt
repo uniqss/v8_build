@@ -1,0 +1,14 @@
+v8编译参数说明
+https://www.chromium.org/developers/gn-build-configuration
+symbol_level：
+The symbol_level setting varies from 0 (no symbols or minimal symbols) to 2 (full symbols). Lower levels make debugging almost impossible, but the build will be much faster. It can be useful in some cases where you just want a build ASAP (many build bots do this).
+is_debug = false：
+The default GN build is debug. To do a release build:  is_debug = false
+target_cpu = "x86"：
+By default, the GN build will match that of the host OS and CPU architecture. To override：target_cpu="x64"
+
+mt mtd md mdd:
+puerts用了一个脚本rep.js，调用node进行替换。
+文件：   E:\projects\v8_build\v8\v8\build\config\win      里面的      BUILD.gn
+static_crt与dynamic_crt
+当然也可以编译前自己手动改一下。

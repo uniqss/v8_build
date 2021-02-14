@@ -23,6 +23,12 @@ call git config --system core.longpaths true
 call git restore *
 cd ..\..\..\
 call gclient sync
+
+
+echo =====[ Make static_crt ]=====
+node %~dp0\rep_static.js  build\config\win\BUILD.gn
+
+
 echo =====[ Building V8 ]=====
 call gn gen out.gn\x64.%build% -args="target_os=""win"" target_cpu=""x64"" v8_use_external_startup_data=true v8_enable_i18n_support=false is_debug=true v8_static_library=true is_clang=false strip_debug_info=true symbol_level=2 v8_enable_pointer_compression=false"
 call ninja -C out.gn\x64.%build% -t clean
